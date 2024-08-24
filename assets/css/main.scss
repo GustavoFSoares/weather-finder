@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+*::before,
+*::after {
+  display: block;
+}
+
+body {
+  line-height: 1;
+  @apply bg-[#1D5ABE];
+  background: linear-gradient(180deg, #2446b9 0%, #1d5abe 50%, #1972c3 100%);
+}
+
+main {
+  @apply w-full h-[100vh] max-w-[800px] m-auto py-32;
+}
