@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h1>index</h1>
+    <SearchInput />
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import SearchInput from "~/components/SearchInput.vue";
+</script>
