@@ -4,4 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/tailwind.css", "~/assets/css/main.scss"],
   modules: ["@nuxtjs/tailwindcss", "@nuxt/eslint", "vuetify-nuxt-module"],
+  runtimeConfig: {
+    weatherApi: "",
+    weatherApiKey: "",
+  },
 });

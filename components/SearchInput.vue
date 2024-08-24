@@ -1,9 +1,11 @@
 <template>
   <div class="search-input">
+    {{ places }}
     <v-text-field
       bg-color="white"
       prepend-inner-icon="mdi-magnify"
       label="Search for a city..."
+      v-model="placeSearch"
     >
       <template #append-inner>
         <div class="search-input__append">
@@ -16,7 +18,37 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const isLoading = ref<boolean>(false);
+const placeSearch = ref<string>("Porto");
+const places = ref();
+
+async function handleLoadData() {
+  isLoading.value = true;
+
+  try {
+    const data = await $fetch("/api/place", {
+      key: "places",
+      method: "GET",
+      query: {
+        search: placeSearch.value,
+      },
+    });
+
+    places.value = data;
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onServerPrefetch(async () => {
+  await handleLoadData();
+});
+
+onBeforeMount(async () => {
+  await handleLoadData();
+});
+</script>
 
 <style lang="scss" scoped>
 .search-input {
