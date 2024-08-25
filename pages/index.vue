@@ -1,7 +1,8 @@
 <template>
   <div>
-    {{ selectedCity }}
     <SearchCityInput @place-selected="handleItemSelected" />
+
+    <NuxtPage />
   </div>
 </template>
 
@@ -9,8 +10,13 @@
 import SearchCityInput from "~/components/SearchCityInput/index.vue";
 import type { ICityItem } from "~/interfaces/PlaceInterface";
 
-const selectedCity = ref<ICityItem | null>(null);
+const $router = useRouter();
 function handleItemSelected(item: ICityItem) {
-  selectedCity.value = item;
+  $router.push({
+    name: "index-latLon",
+    params: {
+      latLon: `${item.location.lat},${item.location.lon}`,
+    },
+  });
 }
 </script>

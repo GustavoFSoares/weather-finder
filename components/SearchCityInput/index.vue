@@ -79,7 +79,9 @@ function handleInputChange(search: string) {
 }
 
 function handleInputFocus(inputFocused: boolean) {
-  citiesIsOpen.value = inputFocused;
+  setTimeout(() => {
+    citiesIsOpen.value = inputFocused;
+  }, 200);
 }
 
 function handleSelectItem(item: ICityItem) {
