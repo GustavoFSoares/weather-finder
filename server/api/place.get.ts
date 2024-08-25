@@ -1,4 +1,4 @@
-import { IGeoItemResponse, ISearchedItem } from "../interfaces/PlaceInterface";
+import type { IGeoItemResponse, ICityItem } from "~/interfaces/PlaceInterface";
 
 export default defineEventHandler(async (event) => {
   const { weatherApi, weatherApiKey } = useRuntimeConfig();
@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { search } = getQuery<{ search?: string }>(event);
 
   if (!search) {
-    return null;
+    return [];
   }
 
   const data = await $fetch<IGeoItemResponse[]>(
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     }
   );
 
-  const mappedItems = data.map<ISearchedItem>((item) => {
+  const mappedItems = data.map<ICityItem>((item) => {
     let label = `${item.name}, `;
     if (item.state) {
       label += `${item.state} - `;

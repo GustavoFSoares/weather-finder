@@ -9,7 +9,7 @@ export interface IGeoItemResponse {
   state: string;
 }
 
-export interface ISearchedItem {
+export interface ICityItem {
   label: string;
   location: {
     lat: number;
