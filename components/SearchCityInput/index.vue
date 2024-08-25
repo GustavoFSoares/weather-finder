@@ -1,13 +1,14 @@
 <template>
   <div class="search-city-input">
     <v-text-field
-      v-model.trim="placeSearch"
+      class="search-city-input__element"
       bg-color="white"
       prepend-inner-icon="mdi-magnify"
       label="Search for a city..."
-      hide-details
-      @update:focused="handleInputFocus"
       :loading="isLoading"
+      :model-value="placeSelected?.label || placeSearch"
+      @update:focused="handleInputFocus"
+      @update:model-value="handleInputChange"
     >
       <template #append-inner>
         <div class="search-city-input__append">
@@ -16,9 +17,16 @@
           </button>
         </div>
       </template>
-    </v-text-field>
 
-    <InputCitiesList v-if="showCitiesList" :cities="places" />
+      <template #details>
+        <InputCitiesList
+          v-if="showCitiesList"
+          class="search-city-input__cities-list"
+          :cities="places"
+          @select="handleSelectItem"
+        />
+      </template>
+    </v-text-field>
   </div>
 </template>
 
@@ -26,21 +34,25 @@
 import type { ICityItem } from "~/interfaces/PlaceInterface";
 import InputCitiesList from "./partials/InputCitiesList.vue";
 
+const $emit = defineEmits<{
+  "place-selected": [ICityItem];
+}>();
+
 const placeSearch = ref<string>("");
 const places = ref<ICityItem[]>([]);
-const isTyping = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const citiesIsOpen = ref<boolean>(false);
 const requestTimeout = ref<NodeJS.Timeout>();
+const placeSelected = ref<ICityItem | null>(null);
 
-const showCitiesList = computed(
-  () => citiesIsOpen.value && placeSearch.value && !isTyping.value
-);
+const showCitiesList = computed(() => citiesIsOpen.value && placeSearch.value);
 
 async function handleLoadData(search: string) {
   try {
     isLoading.value = true;
+    placeSelected.value = null;
     citiesIsOpen.value = false;
+
     const data = await $fetch("/api/place", {
       key: "places",
       method: "GET",
@@ -58,30 +70,45 @@ async function handleLoadData(search: string) {
   }
 }
 
-function handleLazyInput(text: string) {
+function handleInputChange(search: string) {
   clearInterval(requestTimeout.value);
-  isTyping.value = true;
 
   requestTimeout.value = setTimeout(async () => {
-    await handleLoadData(text);
-    isTyping.value = false;
-  }, 500);
+    placeSearch.value = search;
+  }, 700);
 }
 
 function handleInputFocus(inputFocused: boolean) {
   citiesIsOpen.value = inputFocused;
 }
 
+function handleSelectItem(item: ICityItem) {
+  placeSelected.value = item;
+  citiesIsOpen.value = false;
+
+  $emit("place-selected", item);
+}
+
 watch(
   () => placeSearch.value,
   () => {
-    handleLazyInput(placeSearch.value);
+    handleLoadData(placeSearch.value);
   }
 );
 </script>
 
 <style lang="scss" scoped>
 .search-city-input {
+  &__element {
+    :deep(.v-messages) {
+      @apply hidden;
+    }
+
+    :deep(.v-input__details) {
+      @apply p-0 m-0 tracking-normal;
+    }
+  }
+
   &__append {
     @apply h-[60%];
 
@@ -99,6 +126,10 @@ watch(
   &__cross-hair-button {
     @apply w-full h-full;
     @apply flex items-center;
+  }
+
+  &__cities-list {
+    @apply w-full;
   }
 }
 </style>

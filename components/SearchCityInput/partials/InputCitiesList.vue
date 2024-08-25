@@ -4,6 +4,7 @@
       v-for="(city, cityIndex) in cities"
       :key="`${cityIndex}-${city.location.lat},${city.location.lon}`"
       class="input-cities-list__item"
+      @click="handleSelectItem(city)"
     >
       {{ city.label }}
     </li>
@@ -20,17 +21,24 @@ import type { ICityItem } from "~/interfaces/PlaceInterface";
 type Props = {
   cities: ICityItem[];
 };
-const props = defineProps<Props>();
+defineProps<Props>();
+
+const $emit = defineEmits(["select"]);
+
+function handleSelectItem(city: ICityItem) {
+  $emit("select", city);
+}
 </script>
 
 <style lang="scss" scoped>
 .input-cities-list {
-  @apply bg-white;
+  @apply bg-white text-sm font-medium;
 
   @apply rounded-b-sm;
 
   &__item {
-    @apply px-3 py-2;
+    @apply px-3 h-9;
+    @apply flex items-center;
 
     @apply transition border-solid border-black border-t-[1px];
     @apply cursor-pointer;
