@@ -1,5 +1,5 @@
 <template>
-  <div class="search-input">
+  <div class="search-city-input">
     <v-text-field
       v-model.trim="placeSearch"
       bg-color="white"
@@ -10,8 +10,8 @@
       :loading="isLoading"
     >
       <template #append-inner>
-        <div class="search-input__append">
-          <button class="search-input__cross-hair-button">
+        <div class="search-city-input__append">
+          <button class="search-city-input__cross-hair-button">
             <v-icon icon="mdi-crosshairs-gps" />
           </button>
         </div>
@@ -81,7 +81,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.search-input {
+.search-city-input {
   &__append {
     @apply h-[60%];
 
