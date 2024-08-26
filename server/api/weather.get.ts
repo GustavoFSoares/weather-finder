@@ -17,6 +17,18 @@ function normalizedWeather(weather?: string) {
   return weather.replace(/\s/, "-").toLocaleLowerCase();
 }
 
+function getCurrentWeather(currentWeather: ICurrentWeatherResponse) {
+  return {
+    temperature: currentWeather.main.temp,
+    high: currentWeather.main.temp_max,
+    low: currentWeather.main.temp_min,
+    pressure: currentWeather.main.pressure,
+    wind: currentWeather.wind.speed,
+    humidity: currentWeather.main.humidity,
+    precipitation: "N/A %",
+  };
+}
+
 function getCurrentForecast(
   groupedForecast: IGroupedWeatherForecast
 ): IWeatherItemWithTime[] {
@@ -27,7 +39,7 @@ function getCurrentForecast(
   );
 
   if (!currentForecastIndex) {
-    throw new Error("Error trying to get current weather forecast");
+    return [];
   }
 
   return groupedForecast[currentForecastIndex];
@@ -92,7 +104,7 @@ function formatNext3daysForecast(next3daysForecast: IGroupedWeatherForecast) {
         weatherIcon: weatherDayTarget.weather[0]?.icon || "?",
         low: weatherDayTarget.main.temp_min,
         high: weatherDayTarget.main.temp_max,
-        rain: "N/A %",
+        precipitation: "N/A %",
         wind: `${(weatherDayTarget.wind.speed * MPH_MULTILER).toFixed(1)}mph`,
       };
 
@@ -122,60 +134,74 @@ export default defineEventHandler(async (event) => {
     appid: weatherApiKey,
   };
 
-  const currentDataRequest = $fetch<ICurrentWeatherResponse>(
-    `${weatherApi}/data/2.5/weather`,
-    {
-      params,
-    }
-  );
-
-  const forecastDataRequest = $fetch<IForecastResponse>(
-    `${weatherApi}/data/2.5/forecast`,
-    {
-      params,
-    }
-  );
-
-  const [currentData, forecastData] = await Promise.all([
-    currentDataRequest,
-    forecastDataRequest,
-  ]);
-
-  const grupedForecast = forecastData.list.reduce<IGroupedWeatherForecast>(
-    (amount, item) => {
-      const date = new Date(item.dt * 1000);
-
-      const currentDay = date.toLocaleDateString();
-      if (!amount[currentDay]) {
-        amount[currentDay] = [];
+  try {
+    const currentDataRequest = $fetch<ICurrentWeatherResponse>(
+      `${weatherApi}/data/2.5/weather`,
+      {
+        params,
       }
+    );
 
-      const hour = `${date.getHours()}`.padStart(2, "0");
-      const minute = `${date.getMinutes()}`.padStart(2, "0");
-      const weekDay = WeekDaysList[date.getDay()];
+    const forecastDataRequest = $fetch<IForecastResponse>(
+      `${weatherApi}/data/2.5/forecast`,
+      {
+        params,
+      }
+    );
 
-      const itemWithTim: IWeatherItemWithTime = {
-        ...item,
-        date: currentDay,
-        time: `${hour}:${minute}`,
-        weekDay,
-      };
+    const [currentData, forecastData] = await Promise.all([
+      currentDataRequest,
+      forecastDataRequest,
+    ]);
 
-      amount[currentDay].push(itemWithTim);
+    const grupedForecast = forecastData.list.reduce<IGroupedWeatherForecast>(
+      (amount, item) => {
+        const date = new Date(item.dt * 1000);
 
-      return amount;
-    },
-    {} as IGroupedWeatherForecast
-  );
+        const currentDay = date.toLocaleDateString();
+        if (!amount[currentDay]) {
+          amount[currentDay] = [];
+        }
 
-  const currentForecast = getCurrentForecast(grupedForecast);
-  const formattedCurrentForecast = formatCurrentForecast(currentForecast);
+        const hour = `${date.getHours()}`.padStart(2, "0");
+        const minute = `${date.getMinutes()}`.padStart(2, "0");
+        const weekDay = WeekDaysList[date.getDay()];
 
-  const next3DaysForecast = getNext3daysForecast(grupedForecast);
-  const formattedNext3DaysForecast = formatNext3daysForecast(next3DaysForecast);
+        const itemWithTim: IWeatherItemWithTime = {
+          ...item,
+          date: currentDay,
+          time: `${hour}:${minute}`,
+          weekDay,
+        };
 
-  return {
-    formattedCurrentForecast,
-    formattedNext3DaysForecast,
-  };
+        amount[currentDay].push(itemWithTim);
+
+        return amount;
+      },
+      {} as IGroupedWeatherForecast
+    );
+
+    const currentWeather = getCurrentWeather(currentData);
+
+    const currentForecast = getCurrentForecast(grupedForecast);
+    const formattedCurrentForecast = formatCurrentForecast(currentForecast);
+
+    const next3DaysForecast = getNext3daysForecast(grupedForecast);
+    const formattedNext3DaysForecast =
+      formatNext3daysForecast(next3DaysForecast);
+
+    return {
+      current: currentWeather,
+      forecast: formattedCurrentForecast,
+      next3Days: formattedNext3DaysForecast,
+    };
+  } catch (err) {
+    if (Array.isArray(err)) {
+      console.error(err);
+      throw new Error("Error trying to request data");
+    }
+
+    console.error(err);
+    throw new Error("Error during format data");
+  }
 });
