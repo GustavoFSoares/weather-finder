@@ -1,4 +1,5 @@
-import type { IGeoItemResponse, ICityItem } from "~/interfaces/PlaceInterface";
+import type { ICityItem } from "~/interfaces/PlaceInterface";
+import type { IGeoItemResponse } from "../interfaces/PlaceInterface";
 
 export default defineEventHandler(async (event) => {
   const { weatherApi, weatherApiKey } = useRuntimeConfig();
