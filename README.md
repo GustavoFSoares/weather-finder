@@ -1,6 +1,7 @@
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+[Icons Family: Weather Icons Pack v1.1 (Community)](https://www.figma.com/design/JXwj3TVyYljJOzt2bI97WE/Weather-Icons-Pack-v1.1-(Community)?node-id=6-310&t=8mouOOj12FiZJ9ny-0)
 
 ## Setup
 

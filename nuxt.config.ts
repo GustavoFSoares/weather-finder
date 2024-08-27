@@ -9,9 +9,13 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@pinia/nuxt",
     "@nuxt/fonts",
+    "nuxt-svgo",
   ],
   runtimeConfig: {
     weatherApi: "",
     weatherApiKey: "",
+  },
+  svgo: {
+    autoImportPath: "./assets/weather-icons/",
   },
 });
