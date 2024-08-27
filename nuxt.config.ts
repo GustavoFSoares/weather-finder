@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "vuetify-nuxt-module",
     "@pinia/nuxt",
+    "@nuxt/fonts",
   ],
   runtimeConfig: {
     weatherApi: "",
