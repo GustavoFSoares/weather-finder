@@ -1,13 +1,4 @@
-export const WeekDaysList = [
-  "sun",
-  "mon",
-  "tue",
-  "wed",
-  "thu",
-  "fri",
-  "sat",
-] as const;
-export type WeekDay = (typeof WeekDaysList)[number];
+import { WeekDay } from "~/interfaces/WeatherInterface";
 
 export interface IWeatherItem {
   weather: [

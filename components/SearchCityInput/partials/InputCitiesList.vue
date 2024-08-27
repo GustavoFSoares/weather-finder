@@ -11,7 +11,9 @@
   </ul>
 
   <ul v-else class="input-cities-list">
-    <li class="input-cities-list__item--no-item">There's no items to show</li>
+    <li class="input-cities-list__item input-cities-list__item--no-item">
+      There's no items to show
+    </li>
   </ul>
 </template>
 

@@ -1,9 +1,15 @@
 import {
+  ICurrentForecast,
+  IFormatedForecast,
+  IGroupedFormated3DaysForecast,
+  IWeather,
+  WeekDaysList,
+} from "~/interfaces/WeatherInterface";
+import {
   ICurrentWeatherResponse,
   IForecastResponse,
   IGroupedWeatherForecast,
   IWeatherItemWithTime,
-  WeekDaysList,
 } from "../interfaces/WeatherInterface";
 
 const NEXT_DAYS_TIME_TARGET = "09:00";
@@ -17,7 +23,9 @@ function normalizedWeather(weather?: string) {
   return weather.replace(/\s/, "-").toLocaleLowerCase();
 }
 
-function getCurrentWeather(currentWeather: ICurrentWeatherResponse) {
+function getCurrentWeather(
+  currentWeather: ICurrentWeatherResponse
+): ICurrentForecast {
   return {
     temperature: currentWeather.main.temp,
     high: currentWeather.main.temp_max,
@@ -45,7 +53,9 @@ function getCurrentForecast(
   return groupedForecast[currentForecastIndex];
 }
 
-function formatCurrentForecast(currentForecast: IWeatherItemWithTime[]) {
+function formatCurrentForecast(
+  currentForecast: IWeatherItemWithTime[]
+): IFormatedForecast[] {
   const formatedForecast = currentForecast.map((item) => {
     return {
       time: item.time,
@@ -84,34 +94,35 @@ function getNext3daysForecast(
   };
 }
 
-function formatNext3daysForecast(next3daysForecast: IGroupedWeatherForecast) {
-  const formattedNext3Days = Object.values(next3daysForecast).reduce<any>(
-    (amount, item, itemIndex) => {
-      const weatherDayTarget = item.find((item) => {
-        return item.time === NEXT_DAYS_TIME_TARGET;
-      });
+function formatNext3daysForecast(
+  next3daysForecast: IGroupedWeatherForecast
+): IGroupedFormated3DaysForecast {
+  const formattedNext3Days = Object.values(
+    next3daysForecast
+  ).reduce<IGroupedFormated3DaysForecast>((amount, item, itemIndex) => {
+    const weatherDayTarget = item.find((item) => {
+      return item.time === NEXT_DAYS_TIME_TARGET;
+    });
 
-      if (!weatherDayTarget) {
-        throw new Error(
-          `Error trying to get weather day target to index: ${itemIndex}`
-        );
-      }
+    if (!weatherDayTarget) {
+      throw new Error(
+        `Error trying to get weather day target to index: ${itemIndex}`
+      );
+    }
 
-      amount[weatherDayTarget.date] = {
-        weekDay: weatherDayTarget.weekDay,
-        date: weatherDayTarget.date,
-        weather: normalizedWeather(weatherDayTarget.weather[0]?.main),
-        weatherIcon: weatherDayTarget.weather[0]?.icon || "?",
-        low: weatherDayTarget.main.temp_min,
-        high: weatherDayTarget.main.temp_max,
-        precipitation: "N/A %",
-        wind: `${(weatherDayTarget.wind.speed * MPH_MULTILER).toFixed(1)}mph`,
-      };
+    amount[weatherDayTarget.date] = {
+      weekDay: weatherDayTarget.weekDay,
+      date: weatherDayTarget.date,
+      weather: normalizedWeather(weatherDayTarget.weather[0]?.main),
+      weatherIcon: weatherDayTarget.weather[0]?.icon || "?",
+      low: weatherDayTarget.main.temp_min,
+      high: weatherDayTarget.main.temp_max,
+      precipitation: "N/A %",
+      wind: `${(weatherDayTarget.wind.speed * MPH_MULTILER).toFixed(1)}mph`,
+    };
 
-      return amount;
-    },
-    {} as { [x: string]: any }
-  );
+    return amount;
+  }, {} as IGroupedFormated3DaysForecast);
 
   return formattedNext3Days;
 }
@@ -190,11 +201,13 @@ export default defineEventHandler(async (event) => {
     const formattedNext3DaysForecast =
       formatNext3daysForecast(next3DaysForecast);
 
-    return {
+    const weatherData: IWeather = {
       current: currentWeather,
       forecast: formattedCurrentForecast,
       next3Days: formattedNext3DaysForecast,
     };
+
+    return weatherData;
   } catch (err) {
     if (Array.isArray(err)) {
       console.error(err);
