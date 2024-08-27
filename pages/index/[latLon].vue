@@ -1,18 +1,15 @@
 <template>
-  <div>
-    <h1>LatLon</h1>
-
-    <!-- <p>{{ weather }}</p> -->
-  </div>
+  <section>
+    <CurrentWeather />
+  </section>
 </template>
 
 <script lang="ts" setup>
+import type CurrentWeather from "~/components/CurrentWeather.vue";
 import { useLocationStore } from "~/store/location";
 
 const { params } = useRoute();
 const locationStore = useLocationStore();
-
-const weatherData = computed(() => locationStore.weather);
 
 async function handleLoadData() {
   // isLoading.value = true;

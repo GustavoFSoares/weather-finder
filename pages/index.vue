@@ -11,6 +11,7 @@ import SearchCityInput from "~/components/SearchCityInput/index.vue";
 import type { ICityItem } from "~/interfaces/PlaceInterface";
 
 const $router = useRouter();
+
 function handleItemSelected(item: ICityItem) {
   $router.push({
     name: "index-latLon",

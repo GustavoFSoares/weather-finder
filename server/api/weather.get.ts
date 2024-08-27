@@ -3,6 +3,8 @@ import {
   IFormatedForecast,
   IGroupedFormated3DaysForecast,
   IWeather,
+  MonthsDescription,
+  MonthsNumber,
   WeekDaysList,
 } from "~/interfaces/WeatherInterface";
 import {
@@ -26,14 +28,28 @@ function normalizedWeather(weather?: string) {
 function getCurrentWeather(
   currentWeather: ICurrentWeatherResponse
 ): ICurrentForecast {
+  const date = new Date(currentWeather.dt * 1000);
+
+  const weekDay = WeekDaysList[date.getDay()];
+  const day = date.getDate();
+
+  const monthNumber = date.getMonth() as MonthsNumber;
+  const month = MonthsDescription[monthNumber] as string;
+
   return {
+    city: `${currentWeather.name}, ${currentWeather.sys.country} `,
+    weekDay,
+    date: `${day} ${month}`,
+    weather: normalizedWeather(currentWeather.weather[0]?.main),
+    weatherIcon: currentWeather.weather[0]?.icon || "?",
+    weatherDescrition: currentWeather.weather[0]?.description || "?",
     temperature: currentWeather.main.temp,
     high: currentWeather.main.temp_max,
     low: currentWeather.main.temp_min,
     pressure: currentWeather.main.pressure,
     wind: currentWeather.wind.speed,
     humidity: currentWeather.main.humidity,
-    precipitation: "N/A %",
+    precipitation: "N/A",
   };
 }
 
@@ -117,7 +133,7 @@ function formatNext3daysForecast(
       weatherIcon: weatherDayTarget.weather[0]?.icon || "?",
       low: weatherDayTarget.main.temp_min,
       high: weatherDayTarget.main.temp_max,
-      precipitation: "N/A %",
+      precipitation: "N/A",
       wind: `${(weatherDayTarget.wind.speed * MPH_MULTILER).toFixed(1)}mph`,
     };
 
@@ -191,6 +207,8 @@ export default defineEventHandler(async (event) => {
       },
       {} as IGroupedWeatherForecast
     );
+
+    console.log(currentData);
 
     const currentWeather = getCurrentWeather(currentData);
 
