@@ -2,23 +2,27 @@
   <article class="current-weather">
     <div class="current-weather__title">
       <h1 class="current-weather__title-place">{{ currentWeather.city }}</h1>
-      <small class="current-weather__title-day"
-        >{{ weekDay }} {{ currentWeather.date }}</small
-      >
+      <small class="current-weather__title-day">
+        {{ weekDay }} {{ currentWeather.date }}
+      </small>
     </div>
 
     <div class="current-weather__content">
       <aside class="weather">
-        <div class="weather__icon">{{ currentWeather.weather }}</div>
+        <div class="weather__icon">
+          <!-- {{ currentWeather.weather }} -->
+          <svgo-sunny filled />
+        </div>
 
         <div class="weather__value">
           <span class="weather__value-temperature">
-            {{ currentWeather.temperature }}
+            {{ currentWeather.temperature }}º
           </span>
 
           <span class="weather__value-sun">
             {{ currentWeather.weatherDescrition }}
           </span>
+          <span>{{ currentWeather.weather }}</span>
         </div>
       </aside>
 
@@ -64,6 +68,14 @@ const weatherDetail = computed<{ key: string; value: string }[]>(() => {
 .current-weather {
   &__title {
     @apply text-white;
+
+    &-place {
+      @apply font-bold text-2xl;
+    }
+
+    &-day {
+      @apply opacity-70 text-xs font-semibold;
+    }
   }
 
   &__content {
@@ -75,30 +87,46 @@ const weatherDetail = computed<{ key: string; value: string }[]>(() => {
   }
 
   aside {
-    @apply w-full;
+    @apply w-full px-4 py-5;
   }
 
   &__detail {
-    @apply grid grid-cols-3 gap-y-4;
+    @apply grid grid-cols-3 gap-x-1 gap-y-5;
   }
 
   .weather {
-    @apply flex justify-center m-auto;
+    @apply flex justify-around items-center m-auto;
+
+    &__icon {
+      @apply text-7xl;
+
+      span {
+        font-size: 10px;
+      }
+    }
 
     &__value {
       @apply flex flex-col justify-center items-center gap-2 text-white;
+
+      &-temperature {
+        @apply text-5xl font-bold;
+      }
+
+      &-sun {
+        @apply text-base font-bold opacity-70 capitalize;
+      }
     }
   }
 
   .detail-item {
     @apply flex flex-col gap-1;
 
-    &__label {
-      @apply text-white text-opacity-55 capitalize;
+    &__value {
+      @apply text-white text-lg text-opacity-80;
     }
 
-    &__value {
-      @apply text-white;
+    &__label {
+      @apply text-white text-sm text-opacity-55 capitalize;
     }
   }
 }

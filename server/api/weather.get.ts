@@ -25,6 +25,19 @@ function normalizedWeather(weather?: string) {
   return weather.replace(/\s/, "-").toLocaleLowerCase();
 }
 
+function normalizeTemperature(
+  temperature: number,
+  main: boolean = false
+): number {
+  if (main) {
+    return Number(temperature.toFixed(0));
+  }
+
+  console.log(temperature, Number(temperature.toFixed(1)));
+
+  return Number(temperature.toFixed(1));
+}
+
 function getCurrentWeather(
   currentWeather: ICurrentWeatherResponse
 ): ICurrentForecast {
@@ -43,9 +56,9 @@ function getCurrentWeather(
     weather: normalizedWeather(currentWeather.weather[0]?.main),
     weatherIcon: currentWeather.weather[0]?.icon || "?",
     weatherDescrition: currentWeather.weather[0]?.description || "?",
-    temperature: currentWeather.main.temp,
-    high: currentWeather.main.temp_max,
-    low: currentWeather.main.temp_min,
+    temperature: normalizeTemperature(currentWeather.main.temp, true),
+    high: normalizeTemperature(currentWeather.main.temp_max),
+    low: normalizeTemperature(currentWeather.main.temp_min),
     pressure: currentWeather.main.pressure,
     wind: currentWeather.wind.speed,
     humidity: currentWeather.main.humidity,
@@ -75,7 +88,7 @@ function formatCurrentForecast(
   const formatedForecast = currentForecast.map((item) => {
     return {
       time: item.time,
-      temperature: item.main.temp,
+      temperature: normalizeTemperature(item.main.temp),
       weather: normalizedWeather(item.weather[0]?.main),
       weatherIcon: item.weather[0]?.icon || "?",
     };
@@ -131,8 +144,8 @@ function formatNext3daysForecast(
       date: weatherDayTarget.date,
       weather: normalizedWeather(weatherDayTarget.weather[0]?.main),
       weatherIcon: weatherDayTarget.weather[0]?.icon || "?",
-      low: weatherDayTarget.main.temp_min,
-      high: weatherDayTarget.main.temp_max,
+      low: normalizeTemperature(weatherDayTarget.main.temp_min),
+      high: normalizeTemperature(weatherDayTarget.main.temp_max),
       precipitation: "N/A",
       wind: `${(weatherDayTarget.wind.speed * MPH_MULTILER).toFixed(1)}mph`,
     };
@@ -207,8 +220,6 @@ export default defineEventHandler(async (event) => {
       },
       {} as IGroupedWeatherForecast
     );
-
-    console.log(currentData);
 
     const currentWeather = getCurrentWeather(currentData);
 
