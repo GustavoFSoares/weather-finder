@@ -15,11 +15,31 @@ import type NextDaysForecast from "~/components/NextDaysForecast/index.vue";
 
 import { useLocationStore } from "~/store/location";
 
+type MetaData = {
+  title: string;
+  description: string;
+};
+
 const { params } = useRoute();
 const locationStore = useLocationStore();
 
+const isLoading = ref<boolean>(false);
+
+const currentWather = computed(() => locationStore.currentWeather);
+const metaData = computed<MetaData>(() => ({
+  title: `${currentWather.value.temperature}º | ${currentWather.value.city}`,
+  description: `Weather forecast for ${currentWather.value.city}`,
+}));
+
+useSeoMeta({
+  title: metaData.value.title,
+  ogTitle: metaData.value.title,
+  description: metaData.value.description,
+  ogDescription: metaData.value.description,
+});
+
 async function handleLoadData() {
-  // isLoading.value = true;
+  isLoading.value = true;
 
   try {
     const data = await $fetch("/api/weather", {
@@ -32,7 +52,7 @@ async function handleLoadData() {
 
     locationStore.storeWeather(data);
   } finally {
-    // isLoading.value = false;
+    isLoading.value = false;
   }
 }
 
