@@ -1,5 +1,8 @@
 <template>
-  <component :is="mappedIcon" filled />
+  <div :title="`${mappedIcon}`">
+    <component :is="'svgo-' + mappedIcon" filled />
+    <small class="text-sm">{{ name }}</small>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -16,25 +19,17 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const mappedIcon = computed(() => {
-  const prefix = "svgo-";
-
-  let icon: WeatherIcons | null = null;
-
+const mappedIcon = computed<WeatherIcons>(() => {
   switch (props.name) {
     case "clouds":
-      icon = "clould";
-      break;
+      return "clould";
+
+    case "rain":
+      return "rainy";
 
     case "clear":
-      icon = "sunny";
-      break;
-
     default:
-      icon = "sunny";
-      break;
+      return "sunny";
   }
-
-  return prefix + icon;
 });
 </script>

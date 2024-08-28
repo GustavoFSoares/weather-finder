@@ -29,6 +29,10 @@ body {
 }
 
 main {
-  @apply w-full h-[100vh] max-w-[600px] m-auto py-32;
+  @apply w-full h-[100vh] max-w-[600px] m-auto flex items-center;
   font-family: Roboto, sans-serif;
+
+  > * {
+    @apply w-full;
+  }
 }

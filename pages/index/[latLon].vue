@@ -3,12 +3,16 @@
     <CurrentWeather />
 
     <WeatherForecast />
+
+    <NextDaysForecast />
   </section>
 </template>
 
 <script lang="ts" setup>
 import type CurrentWeather from "~/components/CurrentWeather.vue";
 import type WeatherForecast from "~/components/WeatherForecast/index.vue";
+import type NextDaysForecast from "~/components/NextDaysForecast/index.vue";
+
 import { useLocationStore } from "~/store/location";
 
 const { params } = useRoute();
