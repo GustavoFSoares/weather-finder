@@ -10,8 +10,7 @@
     <div class="current-weather__content">
       <aside class="weather">
         <div class="weather__icon">
-          <!-- {{ currentWeather.weather }} -->
-          <svgo-sunny filled />
+          <WeatherIcon :name="currentWeather.weather" />
         </div>
 
         <div class="weather__value">

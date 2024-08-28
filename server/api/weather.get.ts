@@ -33,8 +33,6 @@ function normalizeTemperature(
     return Number(temperature.toFixed(0));
   }
 
-  console.log(temperature, Number(temperature.toFixed(1)));
-
   return Number(temperature.toFixed(1));
 }
 
