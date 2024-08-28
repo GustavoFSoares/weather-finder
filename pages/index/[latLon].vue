@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="currentWather.temperature">
     <CurrentWeather />
 
     <WeatherForecast />
@@ -16,8 +16,8 @@ import type NextDaysForecast from "~/components/NextDaysForecast/index.vue";
 import { useLocationStore } from "~/store/location";
 
 type MetaData = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 };
 
 const { params } = useRoute();
@@ -26,10 +26,16 @@ const locationStore = useLocationStore();
 const isLoading = ref<boolean>(false);
 
 const currentWather = computed(() => locationStore.currentWeather);
-const metaData = computed<MetaData>(() => ({
-  title: `${currentWather.value.temperature}º | ${currentWather.value.city}`,
-  description: `Weather forecast for ${currentWather.value.city}`,
-}));
+const metaData = computed<MetaData>(() => {
+  if (!currentWather.value?.temperature) {
+    return {};
+  }
+
+  return {
+    title: `${currentWather.value.temperature}º | ${currentWather.value.city}`,
+    description: `Weather forecast for ${currentWather.value.city}`,
+  };
+});
 
 useSeoMeta({
   title: metaData.value.title,
