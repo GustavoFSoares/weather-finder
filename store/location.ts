@@ -9,6 +9,7 @@ import type {
 export const useLocationStore = defineStore({
   id: "locations",
   state: () => ({
+    loading: false,
     currentWeatherData: {} as ICurrentForecast,
     forecastData: [] as IFormatedForecast[],
     next3DaysData: {} as IGroupedFormated3DaysForecast,

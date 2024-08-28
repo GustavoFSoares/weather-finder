@@ -23,8 +23,6 @@ type MetaData = {
 const { params } = useRoute();
 const locationStore = useLocationStore();
 
-const isLoading = ref<boolean>(false);
-
 const currentWather = computed(() => locationStore.currentWeather);
 const metaData = computed<MetaData>(() => {
   if (!currentWather.value?.temperature) {
@@ -51,7 +49,7 @@ watch(
 );
 
 async function handleLoadData() {
-  isLoading.value = true;
+  locationStore.loading = true;
 
   try {
     const data = await $fetch("/api/weather", {
@@ -64,7 +62,9 @@ async function handleLoadData() {
 
     locationStore.storeWeather(data);
   } finally {
-    isLoading.value = false;
+    setTimeout(() => {
+      locationStore.loading = false;
+    }, 400);
   }
 }
 

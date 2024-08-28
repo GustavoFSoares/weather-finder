@@ -1,12 +1,17 @@
 <template>
   <div>
-    <SearchCityInput @place-selected="handleItemSelected" />
+    <SearchCityInput
+      @place-selected="handleItemSelected"
+      @request-location="handleGetLocation"
+    />
 
     <NuxtPage />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useLocation } from "~/hooks/useLocation";
+
 import SearchCityInput from "~/components/SearchCityInput/index.vue";
 import type { ICityItem } from "~/interfaces/PlaceInterface";
 
@@ -16,6 +21,7 @@ type MetaData = {
 };
 
 const $router = useRouter();
+const { getLocation } = useLocation();
 
 const metaData = computed<MetaData>(() => ({
   title: `Weather Finder`,
@@ -28,6 +34,17 @@ useSeoMeta({
   description: metaData.value.description,
   ogDescription: metaData.value.description,
 });
+
+async function handleGetLocation() {
+  const { lat, lon } = await getLocation();
+
+  $router.push({
+    name: "index-latLon",
+    params: {
+      latLon: `${lat},${lon}`,
+    },
+  });
+}
 
 function handleItemSelected(item: ICityItem) {
   $router.push({

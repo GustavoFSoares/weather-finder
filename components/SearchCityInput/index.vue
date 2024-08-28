@@ -12,7 +12,10 @@
     >
       <template #append-inner>
         <div class="search-city-input__append">
-          <button class="search-city-input__cross-hair-button">
+          <button
+            class="search-city-input__cross-hair-button"
+            @click="handleRequestLocation"
+          >
             <v-icon icon="mdi-crosshairs-gps" />
           </button>
         </div>
@@ -36,6 +39,7 @@ import InputCitiesList from "./partials/InputCitiesList.vue";
 
 const $emit = defineEmits<{
   "place-selected": [ICityItem];
+  "request-location": [];
 }>();
 
 const placeSearch = ref<string>("");
@@ -89,6 +93,10 @@ function handleSelectItem(item: ICityItem) {
   citiesIsOpen.value = false;
 
   $emit("place-selected", item);
+}
+
+function handleRequestLocation() {
+  $emit("request-location");
 }
 
 watch(
