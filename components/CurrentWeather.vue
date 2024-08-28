@@ -77,11 +77,15 @@ const weatherDetail = computed<{ key: string; value: string }[]>(() => {
   }
 
   &__content {
-    @apply flex;
+    @apply flex flex-col;
+    @apply md:flex-row;
   }
 
   &__divider {
-    @apply w-[1px] h-auto bg-gray-200;
+    @apply bg-gray-200;
+
+    @apply w-auto h-[1px];
+    @apply md:w-[1px] md:h-auto;
   }
 
   aside {

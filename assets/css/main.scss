@@ -29,7 +29,7 @@ body {
 }
 
 main {
-  @apply w-full min-h-[100vh] max-w-[600px] m-auto py-12;
+  @apply w-full min-h-[100vh] max-w-[600px] m-auto py-12 px-3;
   font-family: Roboto, sans-serif;
 
   > * {

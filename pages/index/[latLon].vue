@@ -37,12 +37,18 @@ const metaData = computed<MetaData>(() => {
   };
 });
 
-useSeoMeta({
-  title: metaData.value.title,
-  ogTitle: metaData.value.title,
-  description: metaData.value.description,
-  ogDescription: metaData.value.description,
-});
+watch(
+  () => metaData.value,
+  () => {
+    useSeoMeta({
+      title: metaData.value.title,
+      ogTitle: metaData.value.title,
+      description: metaData.value.description,
+      ogDescription: metaData.value.description,
+    });
+  },
+  { immediate: true }
+);
 
 async function handleLoadData() {
   isLoading.value = true;

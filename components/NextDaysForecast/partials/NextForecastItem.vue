@@ -46,7 +46,7 @@ const weatherDetail = computed<{ key: string; value: string }[]>(() => {
 
 <style lang="scss" scoped>
 .next-forecast-item {
-  @apply w-full;
+  @apply w-full overflow-x-auto;
   @apply flex justify-between items-center;
   @apply bg-black bg-opacity-10 rounded-md;
 
