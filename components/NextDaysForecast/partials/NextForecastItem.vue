@@ -2,7 +2,7 @@
   <div class="next-forecast-item">
     <div class="item-topic item-topic--date">
       <h5 class="item-topic__value">{{ weekDay }}</h5>
-      <h6 class="item-topic__label">{{ date }}</h6>
+      <h6 class="item-topic__label">{{ filteredDate }}</h6>
     </div>
 
     <div class="next-forecast-item__icon">
@@ -22,14 +22,17 @@
 
 <script lang="ts" setup>
 import WeatherIcon from "~/components/WeatherIcon.vue";
-import type {
-  IFormated3DaysForecast,
-  WeekDay,
-} from "~/interfaces/WeatherInterface";
+import type { IFormated3DaysForecast } from "~/interfaces/WeatherInterface";
 
 type Props = IFormated3DaysForecast & {};
 
 const props = defineProps<Props>();
+
+const filteredDate = computed<string>(() => {
+  const [month, day] = props.date.split("/");
+
+  return [month, day].join("/");
+});
 
 const weatherDetail = computed<{ key: string; value: string }[]>(() => {
   return [
@@ -62,10 +65,6 @@ const weatherDetail = computed<{ key: string; value: string }[]>(() => {
 
     &__label {
       @apply text-white text-opacity-55 text-sm;
-    }
-
-    &--date {
-      width: 70px;
     }
   }
 }

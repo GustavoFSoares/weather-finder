@@ -102,6 +102,8 @@ watch(
 <style lang="scss" scoped>
 .search-city-input {
   &__element {
+    @apply relative;
+
     :deep(.v-messages) {
       @apply hidden;
     }
@@ -131,7 +133,7 @@ watch(
   }
 
   &__cities-list {
-    @apply w-full;
+    @apply w-full absolute top-14;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div :title="`${mappedIcon}`">
     <component :is="'svgo-' + mappedIcon" filled />
-    <small class="text-sm">{{ name }}</small>
+    <!-- <small class="text-sm">{{ name }}</small> -->
   </div>
 </template>
 

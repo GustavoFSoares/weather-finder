@@ -21,7 +21,6 @@
           <span class="weather__value-sun">
             {{ currentWeather.weatherDescrition }}
           </span>
-          <span>{{ currentWeather.weather }}</span>
         </div>
       </aside>
 
