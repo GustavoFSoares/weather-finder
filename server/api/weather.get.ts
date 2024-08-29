@@ -14,6 +14,7 @@ import {
   IWeatherItemWithTime,
 } from "../interfaces/WeatherInterface";
 import { Location } from "~/interfaces/PlaceInterface";
+import { addDays, format } from "date-fns";
 
 const NEXT_DAYS_TIME_TARGET = "09:00";
 const MPH_MULTILER = 2.236936;
@@ -70,7 +71,7 @@ function getCurrentWeather(
 function getCurrentForecast(
   groupedForecast: IGroupedWeatherForecast
 ): IWeatherItemWithTime[] {
-  const currentDay = new Date().toLocaleDateString();
+  const currentDay = format(new Date(), "MM/dd/yyyy");
 
   const currentForecastIndex = Object.keys(groupedForecast).find(
     (date) => currentDay === date
@@ -103,17 +104,13 @@ function getNext3daysForecast(
 ): IGroupedWeatherForecast {
   const currentDate = new Date();
 
-  const currentDay = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const year = currentDate.getFullYear();
+  const day1 = format(addDays(currentDate, 1), "MM/dd/yyyy");
+  const day2 = format(addDays(currentDate, 2), "MM/dd/yyyy");
+  const day3 = format(addDays(currentDate, 3), "MM/dd/yyyy");
 
   const [plus1, plus2, plus3] = Object.keys(groupedForecast).filter(
     (itemDate) => {
-      return (
-        `${month}/${currentDay + 1}/${year}` === itemDate ||
-        `${month}/${currentDay + 2}/${year}` === itemDate ||
-        `${month}/${currentDay + 3}/${year}` === itemDate
-      );
+      return day1 === itemDate || day2 === itemDate || day3 === itemDate;
     }
   );
 
@@ -199,7 +196,7 @@ export default defineEventHandler(async (event) => {
       (amount, item) => {
         const date = new Date(item.dt * 1000);
 
-        const currentDay = date.toLocaleDateString();
+        const currentDay = format(date, "MM/dd/yyyy");
         if (!amount[currentDay]) {
           amount[currentDay] = [];
         }
