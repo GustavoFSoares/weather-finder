@@ -1,7 +1,16 @@
 <template>
   <article class="current-weather">
     <div class="current-weather__title">
-      <h1 class="current-weather__title-place">{{ currentWeather.city }}</h1>
+      <h1 class="current-weather__title-place">
+        {{ currentWeather.city }}
+
+        <v-progress-circular
+          v-if="isLoading"
+          size="24"
+          color="white"
+          indeterminate
+        />
+      </h1>
       <small class="current-weather__title-day">
         {{ weekDay }} {{ currentWeather.date }}
       </small>
@@ -44,6 +53,7 @@ import { useLocationStore } from "~/store/location";
 const locationStore = useLocationStore();
 
 const currentWeather = computed(() => locationStore.currentWeather);
+const isLoading = computed(() => locationStore.isLoading);
 const weekDay = computed(
   () => WeekDayDescription[currentWeather.value.weekDay]
 );

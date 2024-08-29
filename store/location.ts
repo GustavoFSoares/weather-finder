@@ -15,6 +15,7 @@ export const useLocationStore = defineStore({
     next3DaysData: {} as IGroupedFormated3DaysForecast,
   }),
   getters: {
+    isLoading: (state) => state.loading,
     currentWeather: (state) => state.currentWeatherData,
     forecast: (state) => state.forecastData,
     next3Days: (state) => state.next3DaysData,

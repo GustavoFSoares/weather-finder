@@ -13,11 +13,16 @@
       <template #append-inner>
         <div class="search-city-input__append">
           <button
+            v-if="!isLoading"
             class="search-city-input__cross-hair-button"
             @click="handleRequestLocation"
           >
             <v-icon icon="mdi-crosshairs-gps" />
           </button>
+
+          <span v-else>
+            <v-progress-circular size="24" color="primary" indeterminate />
+          </span>
         </div>
       </template>
 
@@ -44,8 +49,8 @@ const $emit = defineEmits<{
 
 const placeSearch = ref<string>("");
 const places = ref<ICityItem[]>([]);
-const isLoading = ref<boolean>(false);
 const citiesIsOpen = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 const requestTimeout = ref<NodeJS.Timeout>();
 const placeSelected = ref<ICityItem | null>(null);
 
@@ -96,6 +101,7 @@ function handleSelectItem(item: ICityItem) {
 }
 
 function handleRequestLocation() {
+  citiesIsOpen.value = false;
   $emit("request-location");
 }
 

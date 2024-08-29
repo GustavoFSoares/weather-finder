@@ -34,7 +34,7 @@ function handleSelectItem(city: ICityItem) {
 
 <style lang="scss" scoped>
 .input-cities-list {
-  @apply bg-white text-sm font-medium;
+  @apply bg-white text-sm font-medium z-10;
 
   @apply rounded-b-sm;
 
