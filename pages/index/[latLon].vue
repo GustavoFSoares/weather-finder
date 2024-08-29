@@ -1,5 +1,9 @@
 <template>
-  <section v-if="currentWather.temperature">
+  <section v-if="currentWather.temperature" class="weather-forecast">
+    <div class="weather-forecast__save-location">
+      <SaveLocationButton class="weather-forecast__save-location-element" />
+    </div>
+
     <CurrentWeather />
 
     <WeatherForecast />
@@ -9,6 +13,7 @@
 </template>
 
 <script lang="ts" setup>
+import type SaveLocationButton from "~/components/SaveLocationButton.vue";
 import type CurrentWeather from "~/components/CurrentWeather.vue";
 import type WeatherForecast from "~/components/WeatherForecast/index.vue";
 import type NextDaysForecast from "~/components/NextDaysForecast/index.vue";
@@ -77,4 +82,14 @@ onBeforeMount(async () => {
 });
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.weather-forecast {
+  &__save-location {
+    @apply flex justify-end;
+
+    &-element {
+      @apply fixed top-0;
+    }
+  }
+}
+</style>

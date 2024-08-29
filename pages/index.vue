@@ -5,6 +5,8 @@
       @request-location="handleGetLocation"
     />
 
+    <StoredCitiesList />
+
     <NuxtPage />
   </div>
 </template>

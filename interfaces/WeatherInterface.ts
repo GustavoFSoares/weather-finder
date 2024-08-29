@@ -1,3 +1,5 @@
+import type { Location } from "./PlaceInterface";
+
 export const WeekDaysList = [
   "sun",
   "mon",
@@ -48,6 +50,7 @@ export interface ICurrentForecast {
   wind: number;
   humidity: number;
   precipitation: string;
+  location: Location;
 }
 
 export interface IFormatedForecast {

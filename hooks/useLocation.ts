@@ -1,7 +1,4 @@
-type Location = {
-  lat: number;
-  lon: number;
-};
+import type { Location } from "~/interfaces/PlaceInterface";
 
 export const useLocation = () => {
   function getLocation(): Promise<Location> {

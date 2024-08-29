@@ -13,6 +13,7 @@ import {
   IGroupedWeatherForecast,
   IWeatherItemWithTime,
 } from "../interfaces/WeatherInterface";
+import { Location } from "~/interfaces/PlaceInterface";
 
 const NEXT_DAYS_TIME_TARGET = "09:00";
 const MPH_MULTILER = 2.236936;
@@ -37,7 +38,8 @@ function normalizeTemperature(
 }
 
 function getCurrentWeather(
-  currentWeather: ICurrentWeatherResponse
+  currentWeather: ICurrentWeatherResponse,
+  location: Location
 ): ICurrentForecast {
   const date = new Date(currentWeather.dt * 1000);
 
@@ -61,6 +63,7 @@ function getCurrentWeather(
     wind: currentWeather.wind.speed,
     humidity: currentWeather.main.humidity,
     precipitation: "N/A",
+    location,
   };
 }
 
@@ -219,7 +222,7 @@ export default defineEventHandler(async (event) => {
       {} as IGroupedWeatherForecast
     );
 
-    const currentWeather = getCurrentWeather(currentData);
+    const currentWeather = getCurrentWeather(currentData, { lat, lon });
 
     const currentForecast = getCurrentForecast(grupedForecast);
     const formattedCurrentForecast = formatCurrentForecast(currentForecast);
