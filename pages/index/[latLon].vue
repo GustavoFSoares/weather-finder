@@ -40,6 +40,23 @@ const metaData = computed<MetaData>(() => {
   };
 });
 
+const { data: weatherData } = await useFetch("/api/weather", {
+  key: "weather",
+  method: "GET",
+  query: {
+    latlon: params.latLon,
+  },
+});
+
+locationStore.storeWeather(weatherData.value);
+
+useSeoMeta({
+  title: metaData.value.title,
+  ogTitle: metaData.value.title,
+  description: metaData.value.description,
+  ogDescription: metaData.value.description,
+});
+
 watch(
   () => metaData.value,
   () => {
@@ -49,8 +66,7 @@ watch(
       description: metaData.value.description,
       ogDescription: metaData.value.description,
     });
-  },
-  { immediate: true }
+  }
 );
 
 async function handleLoadData() {
@@ -72,10 +88,6 @@ async function handleLoadData() {
     }, 400);
   }
 }
-
-onServerPrefetch(async () => {
-  await handleLoadData();
-});
 
 onBeforeMount(async () => {
   await handleLoadData();
