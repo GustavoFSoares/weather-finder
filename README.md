@@ -3,7 +3,7 @@
 
 A public web-application to get current weather forecast using Vue.js
 
-
+[Preview](https://gfs-weather-finder.netlify.app/)
 
 
 ## Authors
