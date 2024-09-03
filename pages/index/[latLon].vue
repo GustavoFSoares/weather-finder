@@ -40,13 +40,18 @@ const metaData = computed<MetaData>(() => {
   };
 });
 
-const { data: weatherData } = await useFetch("/api/weather", {
-  key: "weather",
-  method: "GET",
-  query: {
-    latlon: params.latLon,
-  },
-});
+const { data: weatherData, status } = await useAsyncData(
+  "weather",
+  () =>
+    $fetch("/api/weather", {
+      query: {
+        latlon: params.latLon,
+      },
+    }),
+  {
+    watch: [() => params.latLon],
+  }
+);
 
 locationStore.storeWeather(weatherData.value);
 
@@ -69,28 +74,16 @@ watch(
   }
 );
 
-async function handleLoadData() {
-  locationStore.loading = true;
+watch(status, () => {
+  if (status.value !== "success") {
+    locationStore.loading = status.value === "pending";
 
-  try {
-    const data = await $fetch("/api/weather", {
-      key: "weather",
-      method: "GET",
-      query: {
-        latlon: params.latLon,
-      },
-    });
-
-    locationStore.storeWeather(data);
-  } finally {
-    setTimeout(() => {
-      locationStore.loading = false;
-    }, 400);
+    return;
   }
-}
 
-onBeforeMount(async () => {
-  await handleLoadData();
+  setTimeout(() => {
+    locationStore.loading = false;
+  }, 1000);
 });
 </script>
 

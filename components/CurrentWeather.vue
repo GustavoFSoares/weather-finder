@@ -4,12 +4,14 @@
       <h1 class="current-weather__title-place">
         {{ currentWeather.city }}
 
-        <v-progress-circular
-          v-if="isLoading"
-          size="24"
-          color="white"
-          indeterminate
-        />
+        <ClientOnly>
+          <v-progress-circular
+            v-show="isLoading"
+            size="24"
+            color="white"
+            indeterminate
+          />
+        </ClientOnly>
       </h1>
       <small class="current-weather__title-day">
         {{ weekDay }} {{ currentWeather.date }}
